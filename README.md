@@ -14,7 +14,7 @@ Then, to open firefox:
 ffox
 ```
 
-### -s flag
+### -s "[query]"
 
 For search.  
 
@@ -24,7 +24,7 @@ ffox -s "how old is the state of Ohio"
 ```
 Will open the search engine DuckDuckGo with the query string.
 
-### -f flag (in progress)
+### -f "[nickname]" (in progress)
 
 Set websites as favorites and open them using a nickname.
 
