@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# Batch script for opening firefox
+
+# Positional Args
+#    -s [string]  for search
+#    -f [nickname] for favourites. if nickname not in list, make new
+
+
+# Probably have an external dictionary of favorites with nicknames, and we
+# want to get that filepath here
+# Access file, and search for matches
+# if no match, say No matches in database for this nickname. New favorite? Y/N"
+#   if n, then quit
+#   if y, then say set URL: [URL] (make sure to parse out leading spaces)
+	# add new nickname to dictionary and say [nickname] added to Favorites!
+#if match, open that webpage
+chars=abcdefghijklmnopqrztuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ
+target=""
+while getopts ":s:b:f:" o; do # parse command line
+        case "${o}" in
+                s ) # parse search flag
+                        target="https://duckduckgo.com/?t=ffab&q=${2}"
+                        ;;
+
+		f ) # parse favorites flag
+			nickname="${2}" #search
+			filename='ffox_favorites.txt'
+			n=1
+			#while read line; do
+			# first parse each line (format [name,URL])
+			#for /F "tokens=1,2 delims=," %%a in ("%line%") do (
+				
+			#)
+			#if [ "${nickname}" == "${line}" ]
+			
+			# function to check if nickname == favename
+			# if [ the function returns true ] then
+				# break from loop and get url
+				# run ffox [URL] from here and exit
+			#fi
+			#n=$((n+1))
+			#done < $filename
+			# if we've reached the end of the file and no matches
+				# response=input(do you wanna make a new one)
+				# if response is Y then
+					# add key val pair to favorites file
+					# then quit with success message
+				# else
+					# quit
+				# fi
+			#fi
+			;;
+
+		? ) 
+			echo "Bro I literally have no idea what you're talking about"
+                        ;;
+        esac
+done
+
+disown="& disown"
+cmd="ffox ${target} ${end}"
+if [ "${target}" == "" ]
+then
+	/opt/firefox/firefox-bin $1 &
+else
+	/opt/firefox/firefox-bin "${target}" &
+fi
