@@ -59,10 +59,11 @@ while getopts ":s:b:f:" o; do # parse command line
 done
 
 disown="& disown"
-cmd="ffox ${target} ${end}"
+add_on=" 1>/dev/null 2>&1 " #this makes sure that the stdout and stderr go to null
+
 if [ "${target}" == "" ]
 then
-	/opt/firefox/firefox-bin $1 &
+	/opt/firefox/firefox-bin $1 1>/dev/null 2>&1 &
 else
-	/opt/firefox/firefox-bin "${target}" &
+	/opt/firefox/firefox-bin "${target}" 1>/dev/null 2>&1 &
 fi
