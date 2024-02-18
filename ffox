@@ -90,7 +90,8 @@ while getopts "ns?hrf" opt; do # parse command line
 			;;
 
 		?) # huh
-			echo "Bro I literally have no idea what you're talking about. I'll open firefox anyway."
+			echo "Bro I literally have no idea what you're talking about. Call ffox -h for help."
+			exit 0
                         ;;
         esac
 done
