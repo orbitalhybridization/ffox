@@ -14,7 +14,14 @@ Then, to open firefox:
 ffox
 ```
 
-### -s "[query]"
+### -h
+
+Display help text.
+
+### -r
+Random reverend lyric.
+
+### -s query
 
 For search.  
 
@@ -24,13 +31,13 @@ ffox -s "how old is the state of Ohio"
 ```
 Will open the search engine DuckDuckGo with the query string.
 
-### -f "[nickname]" (in progress)
+### -f nickname [url]
 
 Set websites as favorites and open them using a nickname.
 
 Example: 
 
 ```
-ffox -f "networks"
+1. ffox -f "Something" something.com
+2. ffox -f "Something"
 ```
-If "networks" exists, open associated webbage with DuckDuckGo. If not, make a new favorite.

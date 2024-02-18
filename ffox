@@ -15,55 +15,95 @@
 #   if y, then say set URL: [URL] (make sure to parse out leading spaces)
 	# add new nickname to dictionary and say [nickname] added to Favorites!
 #if match, open that webpage
+
+
+
+usage="........\n..FFOX..\n........\n\n\n It's firefox with some pizzaz. \n\n\t \n USAGE \n.......\n\n\t [-h] print this help text \n\t [-r] print a reverend quote \n\t [-s term] search term in duckduckgo. \n\t [-f name [url]] open webpage name or create favorite webpage name;url in favorites.\n"
 chars=abcdefghijklmnopqrztuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ
-target=""
-while getopts ":s:b:f:" o; do # parse command line
-        case "${o}" in
-                s ) # parse search flag
+target="https://duckduckgo.com/"
+new_window=false
+while getopts "ns?hrf" opt; do # parse command line
+        case "$opt" in
+		n) # set new window to true
+			new_window=true
+			;;
+                s) # parse search flag
                         target="https://duckduckgo.com/?t=ffab&q=${2}"
                         ;;
 
-		f ) # parse favorites flag
-			nickname="${2}" #search
-			filename='ffox_favorites.txt'
-			n=1
-			#while read line; do
-			# first parse each line (format [name,URL])
-			#for /F "tokens=1,2 delims=," %%a in ("%line%") do (
-				
-			#)
-			#if [ "${nickname}" == "${line}" ]
-			
-			# function to check if nickname == favename
-			# if [ the function returns true ] then
-				# break from loop and get url
-				# run ffox [URL] from here and exit
-			#fi
-			#n=$((n+1))
-			#done < $filename
-			# if we've reached the end of the file and no matches
-				# response=input(do you wanna make a new one)
-				# if response is Y then
-					# add key val pair to favorites file
-					# then quit with success message
-				# else
-					# quit
-				# fi
-			#fi
+		f) # parse favorites flag
+			# check for favorites.txt
+			if [ ! -f "favorites.txt" ]; then
+				echo -e "\nfavorites.txt does not exist!"
+				read -p "Create it? [y/n] " resp
+				if [ "${resp}" = "y" ]; then
+					touch "favorites.txt"
+					echo "Ok word, created it."
+				else
+					echo "It's a central feature but okay, suit yourself."
+				fi
+				exit 0
+			fi
+			nickname="${2}" # nickname from user
+			url="${3}" # url from user
+			if [ -z "${nickname}" ]; then # check for empty name
+				echo "No name entered. Call with -h flag for help."
+				exit 0
+			fi
+
+			found=false # keep track of whether name was found
+			while IFS= read -r line; do # read through favorites.txt
+				parsed=($(echo $line | tr ";" "\n")) # parse line
+				txtname="${parsed[0]}" # favorite name in file
+				if [ "$nickname" = "${txtname}" ]; then # compare with user input
+					target="${parsed[1]}" # if match, grab target
+					found=true # mark if found
+					break
+				fi
+			done < "favorites.txt"
+			if [ "$found" = false ]; then
+				echo -e "Could not find nickname ${nickname} in favorites.\n"
+				read -p "Add to favorites? [y/n] " resp
+				if [ "${resp}" = "y" ]; then
+					if [ -z "${url}" ]; then
+						echo "Cannot add to favorites without a URL!"
+					else
+						echo "${nickname};${url}" >> favorites.txt
+						echo -e "\nBet.. Added to favorites!\n"
+					fi
+				else
+					echo -e "\nHeard. Not adding to favorites.\n"
+				fi
+				target=url
+			fi
 			;;
 
-		? ) 
-			echo "Bro I literally have no idea what you're talking about"
+		r) # print reverend quote
+			echo "I know his blood can make me whole"
+			exit 0
+			;;
+
+		h) # show help
+			echo -e "$usage"
+			exit 0
+			;;
+
+		?) # huh
+			echo "Bro I literally have no idea what you're talking about. I'll open firefox anyway."
                         ;;
         esac
 done
 
 disown="& disown"
-add_on=" 1>/dev/null 2>&1 " #this makes sure that the stdout and stderr go to null
+noout=" 1>/dev/null 2>&1 " #this makes sure that the stdout and stderr go to null
 
 if [ "${target}" == "" ]
 then
-	/opt/firefox/firefox-bin $1 1>/dev/null 2>&1 &
+	firefox --new-tab ||  "${noout}" &
 else
-	/opt/firefox/firefox-bin "${target}" 1>/dev/null 2>&1 &
+	if [ "$new_window" = true ]; then
+		firefox --new-window "${target}" || "${noout}" &
+	else
+		firefox --new-tab "${target}" || "${noout}" &
+	fi
 fi
