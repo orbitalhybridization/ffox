@@ -34,11 +34,11 @@ while getopts "ns?hrf" opt; do # parse command line
 
 		f) # parse favorites flag
 			# check for favorites.txt
-			if [ ! -f favorites ]; then
+			if [ ! -f "${favorites}" ]; then
 				echo -e "\nfavorites.txt does not exist!"
 				read -p "Create it? [y/n] " resp
 				if [ "${resp}" = "y" ]; then
-					touch favorites
+					touch "${favorites.txt}"
 					echo "Ok word, created it."
 				else
 					echo "It's a central feature but okay, suit yourself."
@@ -61,7 +61,7 @@ while getopts "ns?hrf" opt; do # parse command line
 					found=true # mark if found
 					break
 				fi
-			done < favorites
+			done < "${favorites}"
 			if [ "$found" = false ]; then
 				echo -e "Could not find nickname ${nickname} in favorites.\n"
 				read -p "Add to favorites? [y/n] " resp
@@ -69,13 +69,13 @@ while getopts "ns?hrf" opt; do # parse command line
 					if [ -z "${url}" ]; then
 						echo "Cannot add to favorites without a URL!"
 					else
-						echo "${nickname};${url}" >> favorites
+						echo "${nickname};${url}" >> "${favorites}"
 						echo -e "\nBet.. Added to favorites!\n"
 					fi
 				else
 					echo -e "\nHeard. Not adding to favorites.\n"
 				fi
-				target=url
+				target="${url}"
 			fi
 			;;
 
