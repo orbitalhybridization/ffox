@@ -22,6 +22,7 @@ usage="........\n..FFOX..\n........\n\n\n It's firefox with some pizzaz. \n\n\t 
 chars=abcdefghijklmnopqrztuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ
 target="https://duckduckgo.com/"
 new_window=false
+favorites="${FFOX_PATH}/favorites.txt"
 while getopts "ns?hrf" opt; do # parse command line
         case "$opt" in
 		n) # set new window to true
@@ -33,11 +34,11 @@ while getopts "ns?hrf" opt; do # parse command line
 
 		f) # parse favorites flag
 			# check for favorites.txt
-			if [ ! -f "favorites.txt" ]; then
+			if [ ! -f favorites ]; then
 				echo -e "\nfavorites.txt does not exist!"
 				read -p "Create it? [y/n] " resp
 				if [ "${resp}" = "y" ]; then
-					touch "favorites.txt"
+					touch favorites
 					echo "Ok word, created it."
 				else
 					echo "It's a central feature but okay, suit yourself."
@@ -60,7 +61,7 @@ while getopts "ns?hrf" opt; do # parse command line
 					found=true # mark if found
 					break
 				fi
-			done < "favorites.txt"
+			done < favorites
 			if [ "$found" = false ]; then
 				echo -e "Could not find nickname ${nickname} in favorites.\n"
 				read -p "Add to favorites? [y/n] " resp
@@ -68,7 +69,7 @@ while getopts "ns?hrf" opt; do # parse command line
 					if [ -z "${url}" ]; then
 						echo "Cannot add to favorites without a URL!"
 					else
-						echo "${nickname};${url}" >> favorites.txt
+						echo "${nickname};${url}" >> favorites
 						echo -e "\nBet.. Added to favorites!\n"
 					fi
 				else
